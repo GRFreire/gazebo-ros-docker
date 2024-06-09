@@ -1,0 +1,30 @@
+services:
+  gazebo-ros:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ros2_humble_gazebo_fortress
+    environment:
+      - DISPLAY
+      - QT_X11_NO_MITSHM=1
+      - XAUTHORITY=/tmp/.docker.xauth
+    network_mode: "host"
+    volumes:
+      - "/tmp/.X11-unix:/tmp/.X11-unix"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/dev/input:/dev/input"
+      - "./workdir:/root/workdir"
+    runtime: nvidia
+    privileged: true
+    security_opt:
+      - seccomp:unconfined
+    stdin_open: true
+    tty: true
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
